@@ -34,10 +34,10 @@ Read and search The Holy Bible with this easy to use offline app.
 * (WEB) World English Bible
 
 <img src="theholybible-screenshot2.jpg">
-Three search panels in use
+Three search panels in use<br>
 
 <img src="theholybible-screenshot3.jpg">
-A dark color scheme and background scheme
+A dark color scheme and background scheme<br>
 
 <img src="theholybible-screenshot4.jpg">
 Changing the color scheme via the Options window
