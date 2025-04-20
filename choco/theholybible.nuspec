@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>theholybible</id>
+    <version>1.0.2146</version>
+    <title>The Holy Bible</title>
+    <authors>Blaiz Enterprises</authors>
+    <owners>Blaiz Enterprises</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://opensource.org/license/mit</licenseUrl>
+    <projectUrl>https://www.blaizenterprises.com/theholybible.html</projectUrl>
+    <iconUrl>https://rawcdn.githack.com/blaiz2023/Email-Attachment-Transformer/2bb20d772fb437da6c18d75813aae452d6ceb500/images/eat-256.png</iconUrl>
+    <description>Read and search The Holy Bible with this easy to use offline app.
+
+![The Holy Bible v1.0.2146 Screenshot](https://rawcdn.githack.com/blaiz2023/Email-Attachment-Transformer/2bb20d772fb437da6c18d75813aae452d6ceb500/images/eat-animated.gif)
+
+Features
+* Comes with 11 built-in public domain bibles (see below)
+* Use one, two, or three simultaneous search panels side-by-side
+* Mark matched words by highlight, underline, bold, or turn off
+* Compact option: Title and passage appear on the same line
+* Read text easily in the custom text viewer
+* Large, easy to use search box
+* Option: Search as you type
+* Search by text (book), by testament (old or new), or entire bible
+* Search Options: Match all words, Match whole words
+* Shared Search History: Retain and reuse your last 100 search queries from all three search panels
+* History Options: Edit history and Clear history
+* Fast search
+* Works offline - no internet required
+* Portable
+* Options Window - Easily change app color, font and settings
+
+Comes complete with these 11 built-in public domain bibles:
+* (AKJV) American King James Version
+* (ASV) American Standard Version
+* (BSB) Berean Standard Bible
+* (CPDV) Catholic Public Domain Version
+* (DBT) Darby Bible Translation
+* (DRB) Douay-Rheims Bible
+* (ERV) English Revised Version
+* (KJV) King James Bible - Pure Cambridge Edition
+* (OKJV) King James Bible 1611
+* (WBT) Webster Bible Translation
+* (WEB) World English Bible</description>
+    <summary>Read and search The Holy Bible with this easy to use offline app.</summary>
+    <copyright>2025 Blaiz Enterprises</copyright>
+    <tags>the holy bible read search 11 public domain bibles</tags>
+    <projectSourceUrl>https://github.com/blaiz2023/TheHolyBible</projectSourceUrl>
+    <packageSourceUrl>https://github.com/blaiz2023/TheHolyBible</packageSourceUrl>
+    <docsUrl>https://www.blaizenterprises.com/theholybible.html#help</docsUrl>
+    <bugTrackerUrl>https://blaizenterprises.com/contact.html</bugTrackerUrl>
+  </metadata>
+</package>
