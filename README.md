@@ -1,7 +1,7 @@
 # The Holy Bible
 Read and search The Holy Bible with this easy to use offline app.
 
-<img src="theholybible-screenshot.jpg">
+<img src="images/theholybible-screenshot.jpg">
 
 # Features
 * Comes with 11 built-in public domain bibles (see below)
@@ -33,13 +33,17 @@ Read and search The Holy Bible with this easy to use offline app.
 * (WBT) Webster Bible Translation
 * (WEB) World English Bible
 
-<img src="theholybible-screenshot2.jpg">
+# Download
+<a href="src/theholybible.exe">theholybible.exe</a> - windows all
+
+# Images
+<img src="images/theholybible-screenshot2.jpg">
 Three search panels in use
 
 
-<img src="theholybible-screenshot3.jpg">
+<img src="images/theholybible-screenshot3.jpg">
 A dark color scheme and background scheme
 
 
-<img src="theholybible-screenshot4.jpg">
+<img src="images/theholybible-screenshot4.jpg">
 Changing the color scheme via the Options window
