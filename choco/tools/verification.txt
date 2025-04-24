@@ -15,3 +15,4 @@ Package can be verified like this:
 3. The checksum should match the following:
    checksum type: sha256
    checksum: 13587E0B61C772932F81F63F3C4626FFB01EA400A7543EC75867768F104DA67B
+

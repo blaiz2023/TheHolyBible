@@ -31,7 +31,7 @@ Features
 * Portable
 * Options Window - Easily change app color, font and settings
 
-Comes complete with these 11 built-in public domain bibles:
+Comes complete with these 11 built-in public domain bibles
 * (AKJV) American King James Version
 * (ASV) American Standard Version
 * (BSB) Berean Standard Bible
@@ -45,10 +45,10 @@ Comes complete with these 11 built-in public domain bibles:
 * (WEB) World English Bible</description>
     <summary>Read and search The Holy Bible with this easy to use offline app.</summary>
     <copyright>2025 Blaiz Enterprises</copyright>
-    <tags>the holy bible read search 11 public domain bibles</tags>
+    <tags>read and search the holy bible with this easy to use offline app</tags>
     <projectSourceUrl>https://github.com/blaiz2023/TheHolyBible</projectSourceUrl>
     <packageSourceUrl>https://github.com/blaiz2023/TheHolyBible/tree/main/choco</packageSourceUrl>
     <docsUrl>https://www.blaizenterprises.com/theholybible.html#help</docsUrl>
-    <bugTrackerUrl>https://blaizenterprises.com/contact.html</bugTrackerUrl>
+    <bugTrackerUrl>https://www.blaizenterprises.com/contact.html</bugTrackerUrl>
   </metadata>
 </package>
