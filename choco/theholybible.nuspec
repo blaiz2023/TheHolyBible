@@ -2,17 +2,17 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>theholybible</id>
-    <version>1.0.2146</version>
+    <version>1.0.2155</version>
     <title>The Holy Bible</title>
     <authors>Blaiz Enterprises</authors>
     <owners>Blaiz Enterprises</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <licenseUrl>https://opensource.org/license/mit</licenseUrl>
+    <licenseUrl>https://www.blaizenterprises.com/theholybible.html#help--mit-license</licenseUrl>
     <projectUrl>https://www.blaizenterprises.com/theholybible.html</projectUrl>
     <iconUrl>https://rawcdn.githack.com/blaiz2023/TheHolyBible/0c0bcafacad06144d4b2d29fffd48677329c8e21/images/theholybible-256.png</iconUrl>
     <description>Read and search The Holy Bible with this easy to use offline app.
 
-![The Holy Bible v1.0.2146 Screenshot](https://rawcdn.githack.com/blaiz2023/TheHolyBible/0c0bcafacad06144d4b2d29fffd48677329c8e21/images/theholybible-screenshot.jpg)
+![The Holy Bible v1.0.2155 Screenshot](https://rawcdn.githack.com/blaiz2023/TheHolyBible/dbce3b4e55f1055ad9f8038d511467be08f2635a/images/theholybible-screenshot-1.0.2155.jpg)
 
 Features
 * Comes with 11 built-in public domain bibles (see below)
