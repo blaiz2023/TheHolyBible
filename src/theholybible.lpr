@@ -1,4 +1,4 @@
-program TheHolyBible;
+program theholybible;
 
 {$mode delphi}{$H+}
 
@@ -9,7 +9,6 @@ uses
   {$IFDEF HASAMIGA}
   athreads,
   {$ENDIF}
-  Interfaces,// this includes the LCL widgetset
   main,
   gossgui,
   gossdat,
@@ -25,12 +24,14 @@ uses
   { you can add units after this }
 
 
-//{$R *.RES}
-//include multi-format icon - Delphi 3 can't compile an icon of 256x256 @ 32 bit -> resource error/out of memory error - 19nov2024
-{$R theholybible-16-256.res}//17jun2025
+//include multi-format icon - Delphi 3 can't compile an of 256x256 @ 32 bit -> resource error/out of memory error - 19nov2024
+{$R theholybible-256.res}//17jun2025
+
+//include version information
+{$r ver.res}
 
 begin
-//(1)true=timer event driven and false=direct processing, (2)false=file handle caching disabled, (3)true=gui app mode
+//(1)false=event driven disabled, (2)false=file handle caching disabled, (3)true=gui app mode
 app__boot(true,false,not isconsole);
 end.
 

@@ -1,13 +1,15 @@
 unit main;
+
 interface
+{$ifdef gui4} {$define gui3} {$define gamecore}{$endif}
 {$ifdef gui3} {$define gui2} {$define net} {$define ipsec} {$endif}
 {$ifdef gui2} {$define gui}  {$define jpeg} {$endif}
-{$ifdef gui} {$define snd} {$endif}
+{$ifdef gui} {$define bmp} {$define ico} {$define gif} {$define snd} {$endif}
 {$ifdef con3} {$define con2} {$define net} {$define ipsec} {$endif}
-{$ifdef con2} {$define jpeg} {$endif}
+{$ifdef con2} {$define bmp} {$define ico} {$define gif} {$define jpeg} {$endif}
 {$ifdef fpc} {$mode delphi}{$define laz} {$define d3laz} {$undef d3} {$else} {$define d3} {$define d3laz} {$undef laz} {$endif}
-uses gossroot, {$ifdef gui}gossgui,{$endif} {$ifdef snd}gosssnd,{$endif} gosswin, gossio, gossimg, gossnet;
-{$B-} {generate short-circuit boolean evaluation code -> stop evaluating logic as soon as value is known}
+uses gosswin2, gossroot, {$ifdef gui}gossgui,{$endif} {$ifdef snd}gosssnd,{$endif} gosswin, gossio, gossimg, gossnet;
+{$align on}{$O+}{$W-}{$I-}{$U+}{$V+}{$B-}{$X+}{$T-}{$P+}{$H+}{$J-} { set critical compiler conditionals for proper compilation - 10aug2025 }
 //## ==========================================================================================================================================================================================================================
 //##
 //## MIT License
@@ -28,9 +30,9 @@ uses gossroot, {$ifdef gui}gossgui,{$endif} {$ifdef snd}gosssnd,{$endif} gosswin
 //##
 //## ==========================================================================================================================================================================================================================
 //## Library.................. app code (main.pas)
-//## Version.................. 1.00.2155 (+9)
+//## Version.................. 1.00.2158 (+12)
 //## Items.................... 3
-//## Last Updated ............ 16jun2025, 17apr2025, 21mar2025
+//## Last Updated ............ 09nov2025, 16jun2025, 17apr2025, 21mar2025
 //## Lines of Code............ 2,300+
 //##
 //## main.pas ................ app code
@@ -38,12 +40,15 @@ uses gossroot, {$ifdef gui}gossgui,{$endif} {$ifdef snd}gosssnd,{$endif} gosswin
 //## gossio.pas .............. file io
 //## gossimg.pas ............. image/graphics
 //## gossnet.pas ............. network
-//## gosswin.pas ............. 32bit windows api's/xbox controller
+//## gosswin.pas ............. static Win32 api calls
+//## gosswin2.pas ............ dynamic Win32 api calls
 //## gosssnd.pas ............. sound/audio/midi/chimes
 //## gossgui.pas ............. gui management/controls
 //## gossdat.pas ............. app icons (24px and 20px) and help documents (gui only) in txt, bwd or bwp format
 //## gosszip.pas ............. zip support
 //## gossjpg.pas ............. jpeg support
+//## gossgame.pas ............ game support (optional)
+//## gamefiles.pas ........... internal files for game (optional)
 //##
 //## ==========================================================================================================================================================================================================================
 //## | Name                   | Hierarchy         | Version   | Date        | Update history / brief description of function
@@ -294,8 +299,10 @@ xname:=strlow(xname);
 if      (xname='slogan')              then result:=''//info__app('name')+' by Blaiz Enterprises'
 else if (xname='width')               then result:='1450'
 else if (xname='height')              then result:='900'
-else if (xname='ver')                 then result:='1.00.2155'
-else if (xname='date')                then result:='16jun2025'
+else if (xname='language')            then result:='english-australia'//for Clyde - 14sep2025
+else if (xname='codepage')            then result:='1252'
+else if (xname='ver')                 then result:='1.00.2158'
+else if (xname='date')                then result:='09nov2025'
 else if (xname='name')                then result:='The Holy Bible'
 else if (xname='web.name')            then result:='theholybible'//used for website name
 else if (xname='des')                 then result:='Read and search through the passages of The Holy Bible'
@@ -336,48 +343,9 @@ else if (xname='url.github')          then result:='https://github.com/blaiz2023
 else if (xname='license')             then result:='MIT License'
 else if (xname='copyright')           then result:='© 1997-'+low__yearstr(2025)+' Blaiz Enterprises'
 else if (xname='splash.web')          then result:='Web Portal: '+app__info('url.portal')
+//.overrides
+else if (xname='color.name')          then result:='white and pale'//default color scheme name - 09nov2025
 
-
-//.program values -> defaults and fallback values
-else if (xname='focused.opacity')     then result:='255'//range: 50..255
-else if (xname='unfocused.opacity')   then result:='255'//range: 30..255
-else if (xname='opacity.speed')       then result:='9'//range: 1..10 (1=slowest, 10=fastest)
-
-else if (xname='head.center')         then result:='0'//1=center window title, 0=left align window title
-else if (xname='head.align')          then result:='1'//0=left, 1=center, 2=right -> head based toolbar alignment
-else if (xname='high.above')          then result:='0'//highlight above, 0=off, 1=on
-
-else if (xname='modern')              then result:='1'//range: 0=legacy, 1=modern
-else if (xname='scroll.size')         then result:='20'//scrollbar size: 5..72
-
-else if (xname='bordersize')          then result:='7'//0..72 - frame size
-else if (xname='sparkle')             then result:='7'//0..20 - default sparkle level -> set 1st time app is run, range: 0-20 where 0=off, 10=medium and 20=heavy)
-else if (xname='brightness')          then result:='100'//60..130 - default brightness
-
-else if (xname='ecomode')             then result:='0'//1=economy mode on, 0=economy mode off
-else if (xname='emboss')              then result:='0'//0=off, 1=on
-else if (xname='color.name')          then result:='white and pale'//default color scheme name
-//else if (xname='color.name')          then result:='black 8'//white 5'//default color scheme name
-else if (xname='back.name')           then result:='plaster'//'texture'//balls'//default background name
-//else if (xname='back.name')           then result:=''//default background name
-else if (xname='frame.name')          then result:='narrow'//default frame name
-else if (xname='frame.max')           then result:='1'//0=no frame when maximised, 1=frame when maximised
-//.font
-else if (xname='font.name')           then result:='Arial'//default GUI font name
-else if (xname='font.size')           then result:='10'//default GUI font size
-//.font2
-else if (xname='font2.use')           then result:='1'//0=don't use, 1=use this font for text boxes (special cases)
-else if (xname='font2.name')          then result:='Courier New'
-else if (xname='font2.size')          then result:='12'
-//.help
-else if (xname='help.maxwidth')       then result:='500'//pixels - right column when help shown
-
-//.paid/store support
-else if (xname='paid')                then result:='0'//desktop paid status ->  programpaid -> 0=free, 1..N=paid - also works inconjunction with "system_storeapp" and it's cost value to determine PAID status is used within help etc
-else if (xname='paid.store')          then result:='1'//store paid status
-//.anti-tamper programcode checker - updated dual version (program EXE must be secured using "Blaiz Tools") - 11oct2022
-else if (xname='check.mode')          then result:='-91234356'//disable check
-//else if (xname='check.mode')          then result:='234897'//enable check
 else
    begin
    //nil

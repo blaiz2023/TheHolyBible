@@ -6,7 +6,7 @@
  <BuildModes Active="Default"/>
  <Units>
  <Unit>
-  <Filename Value="TheHolyBible.lpr"/>
+  <Filename Value="theholybible.lpr"/>
   <IsPartOfProject Value="True"/>
   <IsVisibleTab Value="True"/>
   <EditorIndex Value="1"/>

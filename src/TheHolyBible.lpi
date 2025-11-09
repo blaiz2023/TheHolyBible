@@ -5,14 +5,14 @@
  <PathDelim Value="\"/>
  <General>
   <SessionStorage Value="InProjectDir"/>
-  <Title Value="TheHolyBible"/>
+  <Title Value="theholybible"/>
   <Scaled Value="True"/>
   <ResourceType Value="res"/>
   <UseXPManifest Value="True"/>
   <XPManifest>
    <DpiAware Value="True/PM_V2"/>
-   <TextName Value="TheHolyBible"/>
-   <TextDesc Value="TheHolyBible"/>
+   <TextName Value="theholybible"/>
+   <TextDesc Value="theholybible"/>
   </XPManifest>
  </General>
  <BuildModes>
@@ -32,7 +32,7 @@
  </RequiredPackages>
  <Units>
   <Unit>
-  <Filename Value="TheHolyBible.lpr"/>
+  <Filename Value="theholybible.lpr"/>
   <IsPartOfProject Value="True"/>
   </Unit>
  </Units>
@@ -41,7 +41,7 @@
  <Version Value="11"/>
  <PathDelim Value="\"/>
  <Target>
-  <Filename Value="TheHolyBible"/>
+  <Filename Value="theholybible"/>
  </Target>
  <SearchPaths>
   <IncludeFiles Value="$(ProjOutDir)"/>
