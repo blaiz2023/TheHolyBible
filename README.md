@@ -36,7 +36,8 @@ Comes complete with these 11 built-in public domain bibles
 * (WEB) World English Bible
 
 # Download
-<a href="src/theholybible.exe">theholybible.exe</a> - windows all
+Download <a href="src/theholybible.exe">theholybible.exe</a> or from the "<a href="bin/">bin</a>" or "<a href="src/">src</a>" folders above.
+
 
 # Images
 <img src="images/theholybible-screenshot2.jpg">
