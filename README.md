@@ -1,9 +1,10 @@
-# The Holy Bible
+# The Holy Bible v1.0.2158 / 09nov2025 / MIT License
 Read and search The Holy Bible with this easy to use offline app.
 
 <img src="images/theholybible-screenshot.jpg">
 
 # Features
+Features
 * Comes with 11 built-in public domain bibles (see below)
 * Use one, two, or three simultaneous search panels side-by-side
 * Mark matched words by highlight, underline, bold, or turn off
@@ -17,10 +18,11 @@ Read and search The Holy Bible with this easy to use offline app.
 * History Options: Edit history and Clear history
 * Fast search
 * Works offline - no internet required
+* Options Window - Easily change app color, font, and settings
 * Portable
-* Options Window - Easily change app color, font and settings
+* Smart Source Code (Borland Delphi 3 and Lazarus 2)
 
-# Comes complete with these 11 built-in public domain bibles
+Comes complete with these 11 built-in public domain bibles
 * (AKJV) American King James Version
 * (ASV) American Standard Version
 * (BSB) Berean Standard Bible
