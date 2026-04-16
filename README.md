@@ -4,7 +4,6 @@ Read and search The Holy Bible with this easy to use offline app.
 <img src="images/theholybible-screenshot.jpg">
 
 # Features
-Features
 * Comes with 11 built-in public domain bibles (see below)
 * Use one, two, or three simultaneous search panels side-by-side
 * Mark matched words by highlight, underline, bold, or turn off
@@ -20,7 +19,7 @@ Features
 * Works offline - no internet required
 * Options Window - Easily change app color, font, and settings
 * Portable
-* Smart Source Code (Borland Delphi 3 and Lazarus 2)
+* Smart Source Code (Borland Delphi 3 and Lazarus 2.2/4.4/4.6)
 
 Comes complete with these 11 built-in public domain bibles
 * (AKJV) American King James Version
