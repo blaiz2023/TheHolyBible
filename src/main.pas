@@ -8,13 +8,13 @@ interface
 {$ifdef con3} {$define con2} {$define net} {$define ipsec} {$endif}
 {$ifdef con2} {$define bmp} {$define ico} {$define gif} {$define jpeg} {$endif}
 {$ifdef fpc} {$mode delphi}{$define laz} {$define d3laz} {$undef d3} {$else} {$define d3} {$define d3laz} {$undef laz} {$endif}
-uses gosswin2, gossroot, {$ifdef gui}gossgui,{$endif} {$ifdef snd}gosssnd,{$endif} gosswin, gossio, gossimg, gossnet;
+uses gossroot, {$ifdef gui}gossgui,{$endif} {$ifdef snd}gosssnd,{$endif} gosswin, gosswin2, gossio, gossimg, gossnet, gossfast, gossteps, gosstext;
 {$align on}{$O+}{$W-}{$I-}{$U+}{$V+}{$B-}{$X+}{$T-}{$P+}{$H+}{$J-} { set critical compiler conditionals for proper compilation - 10aug2025 }
 //## ==========================================================================================================================================================================================================================
 //##
 //## MIT License
 //##
-//## Copyright 2025 Blaiz Enterprises ( http://www.blaizenterprises.com )
+//## Copyright 2026 Blaiz Enterprises ( http://www.blaizenterprises.com )
 //##
 //## Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
 //## files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
@@ -30,25 +30,29 @@ uses gosswin2, gossroot, {$ifdef gui}gossgui,{$endif} {$ifdef snd}gosssnd,{$endi
 //##
 //## ==========================================================================================================================================================================================================================
 //## Library.................. app code (main.pas)
-//## Version.................. 1.00.2158 (+12)
+//## Version.................. 1.00.2160 (+14)
 //## Items.................... 3
-//## Last Updated ............ 09nov2025, 16jun2025, 17apr2025, 21mar2025
-//## Lines of Code............ 2,300+
+//## Last Updated ............ 17apr2026, 09nov2025, 16jun2025, 17apr2025, 21mar2025
+//## Lines of Code............ 2,400+
+//## Origin .................. Human generated and maintained
 //##
-//## main.pas ................ app code
-//## gossroot.pas ............ console/gui app startup and control
-//## gossio.pas .............. file io
-//## gossimg.pas ............. image/graphics
-//## gossnet.pas ............. network
-//## gosswin.pas ............. static Win32 api calls
-//## gosswin2.pas ............ dynamic Win32 api calls
-//## gosssnd.pas ............. sound/audio/midi/chimes
-//## gossgui.pas ............. gui management/controls
-//## gossdat.pas ............. app icons (24px and 20px) and help documents (gui only) in txt, bwd or bwp format
-//## gosszip.pas ............. zip support
-//## gossjpg.pas ............. jpeg support
-//## gossgame.pas ............ game support (optional)
-//## gamefiles.pas ........... internal files for game (optional)
+//## main.pas ................ App specific code
+//## gossdat.pas ............. App specific icons and help documents
+//## gossfast.pas ............ FastDraw - rapid render graphic procs
+//## gossgame.pas ............ GameCore - 2D game engine with integrated menu handler, xbox controller + mouse + keyboard support and window integration
+//## gamefiles.pas ........... Built-in file(s) for GameCore (optional)
+//## gossgui.pas ............. GUI management and controls
+//## gossimg.pas ............. Multi-format graphic procs for 8, 24 and 32 bit images with IO support
+//## gossio.pas .............. File IO and low level file/folder/disk/data format procs
+//## gossjpg.pas ............. JPEG IO (read/write jpeg image data via third party libraries)
+//## gossnet.pas ............. Networking - ip filtering, socket management etc
+//## gossroot.pas ............ App startup and control (GUI, console and service)
+//## gosssnd.pas ............. Sound, audio, midi and midi based chimes
+//## gossteps.pas ............ System, Folder and App images
+//## gosstext.pas ............ TextCore - non-GUI and GUI text engine for text boxes
+//## gosswin.pas ............. Win32 api calls for 32 and 64 bit (static / api references disabled by default)
+//## gosswin2.pas ............ Win32 api calls for 32 and 64 bit (dynamic - load as required with fallback failure handling and default value(s) support)
+//## gosszip.pas ............. ZIP IO (read/write zip data via third party libraries)
 //##
 //## ==========================================================================================================================================================================================================================
 //## | Name                   | Hierarchy         | Version   | Date        | Update history / brief description of function
@@ -77,17 +81,25 @@ var
 
 
 const
-   //line codes
-   lbCode         =ssdollar;
-   lbTitle        =ssat;
-   lbTestament    =ssexclaim;
-   lbBook         =sshash;
-   //scope code
-   scFull         =2;
-   scTestament    =1;
-   scBook         =0;
 
-   bookcore_titlecount=200;
+   //app teps
+   tepWrite32                   =tepCustomBASE20 + 0;//was: 5000
+   tepSearch32                  =tepCustomBASE20 + 1;//was: 5001
+   tepPanel20                   =tepCustomBASE20 + 2;//was: 5002
+
+   //line codes
+   lbCode                       =ssdollar;
+   lbTitle                      =ssat;
+   lbTestament                  =ssexclaim;
+   lbBook                       =sshash;
+
+   //scope code
+   scFull                       =2;
+   scTestament                  =1;
+   scBook                       =0;
+
+   bookcore_titlecount          =200;
+
 
 type
 {tbookcore}
@@ -244,27 +256,29 @@ procedure app__ontimer;
 
 //.support procs
 function app__netmore:tnetmore;//optional - return a custom "tnetmore" object for a custom helper object for each network record -> once assigned to a network record, the object remains active and ".clear()" proc is used to reduce memory/clear state info when record is reset/reused
-function app__findcustomtep(xindex:longint;var xdata:tlistptr):boolean;
+procedure app__customTEP(const xindex:longint);
 function app__syncandsavesettings:boolean;
 
 const
-tep_write32:array[0..432] of byte=(
-84,69,65,49,35,17,0,0,0,30,0,0,0,255,255,255,37,0,0,0,2,255,255,255,2,0,0,0,2,255,255,255,11,0,0,0,2,255,255,255,2,0,0,0,2,255,255,255,11,0,0,0,2,255,255,255,2,0,0,0,3,255,255,255,10,0,0,0,2,255,255,255,2,0,0,0,3,255,255,255,10,0,0,0,2,255,255,255,2,0,0,0,4,255,255,255,9,0,0,0,2,255,255,255,2,0,0,0,4,255,255,255,9,0,0,0,2,255,255,255,2,0,0,0,5,255,255,255,8,0,0,0,2,255,255,255,2,0,0,0,5,255,255,255,8,0,0,0,2,255,255,255,2,0,0,0,6,255,255,255,7,0,0,0,2,255,255,255,2,0,0,0,6,255,255,255,7,0,0,0,2,255,255,255,2,0,0,0,7,255,255,255,6,0,0,0,2,255,255,255,2,0,0,0,7,255,255,255,6,0,0,0,2,255,255,255,2,0,0,0,7,255,255,255,6,0,0,0,2,255,255,255,2,0,0,0,7,255,255,255,6,0,0,0,2,255,255,255,2,0,0,0,7,255,255,255,6,0,0,0,2,255,255,255,2,0,0,0,7,255,255,255,6,0,0,0,2,255,255,255,2,0,0,0,6,255,255,255,7,0,0,0,2,255,255,255,2,0,0,0,6,255,255,255,7,0,0,0,2,255,255,255,2,0,0,0,5,255,255,255,8,0,0,0,2,255,255,255,2,0,0,0,5,255,255,255,8,0,0,0,2,255,255,255,2,0,0,0,4,255,255,255,9,0,0,0,2,255,255,255,2,0,0,0,4,255,
-255,255,9,0,0,0,2,255,255,255,2,0,0,0,3,255,255,255,10,0,0,0,2,255,255,255,2,0,0,0,3,255,255,255,10,0,0,0,2,255,255,255,2,0,0,0,2,255,255,255,11,0,0,0,2,255,255,255,2,0,0,0,2,255,255,255,42);
+tep_write32
+:array[0..190] of byte=(
+137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,13,0,0,0,32,8,6,0,0,0,201,217,242,148,0,0,0,134,73,68,65,84,120,1,228,147,221,10,192,32,8,70,211,247,127,101,219,112,240,129,147,200,207,139,193,198,186,49,171,227,137,126,198,120,117,19,223,157,153,29,30,85,245,202,231,156,183,220,231,208,68,100,40,146,78,220,66,48,230,130,91,40,47,70,94,66,43,91,9,161,122,140,20,148,109,20,20,45,222,167,161,104,163,161,104,107,65,176,181,32,216,126,15,225,191,61,123,16,176,180,158,17,238,136,134,162,133,134,162,133,130,178,133,130,178,165,132,86,150,18,90,89,62,48,118,2,0,0,255,255,3,0,34,15,28,52,163,208,253,9,0,0,0,0,73,69,78,68,174,66,96,130);
 
-tep_search32:array[0..416] of byte=(
-84,69,65,49,35,32,0,0,0,30,0,0,0,255,255,255,139,0,0,0,6,255,255,255,24,0,0,0,2,255,255,255,6,0,0,0,1,255,255,255,22,0,0,0,1,255,255,255,9,0,0,0,2,255,255,255,19,0,0,0,1,255,255,255,11,0,0,0,1,255,255,255,19,0,0,0,1,255,255,255,4,0,0,0,2,255,255,255,6,0,0,0,1,255,255,255,17,0,0,0,1,255,255,255,4,0,0,0,1,255,255,255,9,0,0,0,1,255,255,255,16,0,0,0,1,255,255,255,3,0,0,0,1,255,255,255,10,0,0,0,1,255,255,255,16,0,0,0,1,255,255,255,3,0,0,0,1,255,255,255,10,0,0,0,1,255,255,255,16,0,0,0,1,255,255,255,14,0,0,0,1,255,255,255,16,0,0,0,1,255,255,255,14,0,0,0,1,255,255,255,16,0,0,0,1,255,255,255,14,0,0,0,1,255,255,255,17,0,0,0,1,255,255,255,12,0,0,0,1,255,255,255,19,0,0,0,1,255,255,255,11,0,0,0,1,255,255,255,19,0,0,0,2,255,255,255,9,0,0,0,3,255,255,255,20,0,0,0,1,255,255,255,6,0,0,0,4,255,255,255,1,0,0,0,1,255,255,255,20,0,0,0,6,255,255,255,2,0,0,0,1,255,255,255,3,0,0,0,1,255,255,255,28,0,0,0,1,255,255,255,3,0,0,0,1,255,255,255,28,0,0,0,1,255,255,255,3,0,0,0,1,255,255,255,28,0,0,0,1,255,255,255,3,0,0,0,1,255,
-255,255,28,0,0,0,1,255,255,255,3,0,0,0,1,255,255,255,28,0,0,0,1,255,255,255,3,0,0,0,1,255,255,255,28,0,0,0,1,255,255,255,1,0,0,0,2,255,255,255,29,0,0,0,2,255,255,255,100);
+tep_search32
+:array[0..319] of byte=(
+137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,25,0,0,0,32,8,6,0,0,0,231,156,211,6,0,0,1,7,73,68,65,84,120,1,236,146,91,14,131,48,12,4,161,247,191,51,205,80,45,50,139,243,104,65,85,165,226,15,156,56,235,157,36,100,154,238,248,181,27,152,217,208,178,44,135,125,149,218,177,88,84,115,137,131,184,81,64,254,240,117,204,9,204,178,96,205,123,122,243,29,36,154,215,26,1,163,35,106,26,175,111,16,154,48,112,65,54,31,213,169,119,131,168,16,51,96,34,214,52,6,84,91,147,70,121,133,32,246,221,169,230,117,53,146,71,65,233,73,4,136,134,103,198,41,228,140,97,214,155,66,90,87,148,153,244,106,41,164,215,244,238,250,247,32,163,175,196,79,48,250,64,182,147,124,10,114,112,54,223,32,90,100,119,26,183,178,116,202,45,237,14,194,105,136,86,35,107,132,76,123,122,116,59,136,55,190,236,246,223,117,23,229,131,150,177,114,4,203,71,57,133,168,81,134,49,171,145,90,52,246,185,116,228,42,36,138,106,99,55,246,185,250,78,65,48,113,99,159,163,57,13,25,1,93,2,233,129,46,131,56,40,62,138,75,33,14,226,255,80,187,
+227,79,111,224,9,0,0,255,255,3,0,165,96,183,62,62,159,67,197,0,0,0,0,73,69,78,68,174,66,96,130);
 
-tep_panel20:array[0..416] of byte=(
-84,69,65,49,35,16,0,0,0,20,0,0,0,252,252,252,50,102,102,51,12,252,252,252,3,128,128,64,2,252,252,252,1,128,128,64,1,252,252,252,1,128,128,64,1,252,252,252,7,128,128,64,1,252,252,252,2,153,153,76,1,252,252,252,1,153,153,76,1,252,252,252,1,153,153,76,2,252,252,252,7,153,153,76,1,252,252,252,2,178,178,89,2,252,252,252,1,178,178,89,1,252,252,252,1,178,178,89,1,252,252,252,7,178,178,89,1,252,252,252,2,204,204,102,1,252,252,252,1,204,204,102,1,252,252,252,1,204,204,102,2,252,252,252,7,204,204,102,1,252,252,252,2,230,230,115,2,252,252,252,1,230,230,115,1,252,252,252,1,230,230,115,1,252,252,252,7,230,230,115,1,252,252,252,2,255,255,128,1,252,252,252,1,255,255,128,1,252,252,252,1,255,255,128,2,252,252,252,7,255,255,128,1,252,252,252,2,255,255,128,2,252,252,252,1,255,255,128,1,252,252,252,1,255,255,128,1,252,252,252,7,255,255,128,1,252,252,252,2,230,230,115,1,252,252,252,1,230,230,115,1,252,252,252,1,230,230,115,2,252,252,252,7,230,230,115,1,252,252,252,2,204,204,102,2,252,252,252,1,204,204,102,1,252,252,
-252,1,204,204,102,1,252,252,252,7,204,204,102,1,252,252,252,2,178,178,89,1,252,252,252,1,178,178,89,1,252,252,252,1,178,178,89,2,252,252,252,7,178,178,89,1,252,252,252,2,153,153,76,2,252,252,252,1,153,153,76,1,252,252,252,1,153,153,76,1,252,252,252,7,153,153,76,1,252,252,252,2,128,128,64,1,252,252,252,1,128,128,64,1,252,252,252,1,128,128,64,2,252,252,252,7,128,128,64,1,252,252,252,3,102,102,51,12,252,252,252,50);
+tep_panel20
+:array[0..341] of byte=(
+137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,16,0,0,0,20,8,6,0,0,0,132,98,189,119,0,0,1,29,73,68,65,84,120,1,164,84,49,14,130,64,16,188,19,75,105,73,224,21,116,126,192,202,202,15,88,209,241,1,27,74,26,63,64,103,229,7,172,168,252,128,157,175,128,196,86,74,200,153,89,25,52,154,59,140,108,51,220,206,206,176,44,11,186,109,91,53,37,102,83,196,208,78,54,152,179,131,52,93,26,94,255,130,69,113,209,168,19,131,60,95,153,40,242,85,150,157,53,174,223,209,102,198,58,49,8,195,133,74,146,147,62,28,54,34,6,34,231,10,242,50,131,48,244,85,89,110,13,76,136,200,185,130,188,116,128,246,227,184,208,215,107,106,214,235,163,32,114,174,32,47,29,224,112,187,237,12,76,136,44,176,153,144,31,30,33,8,246,218,243,114,67,100,139,54,3,242,195,30,64,220,117,153,152,0,109,194,207,188,204,160,174,239,10,119,70,251,68,20,6,193,103,249,235,252,212,244,155,88,85,119,133,1,66,76,68,206,21,228,165,3,28,48,125,188,66,34,196,113,108,183,128,6,188,204,0,237,96,121,32,38,34,231,10,242,253,12,154,175,53,118,137,193,
+213,117,35,37,154,255,131,127,63,166,193,96,236,142,54,126,216,3,91,193,88,126,178,193,3,0,0,255,255,3,0,26,194,156,36,58,174,133,196,0,0,0,0,73,69,78,68,174,66,96,130);
+
 {
 :array[0..416] of byte=(
-84,69,65,49,35,16,0,0,0,20,0,0,0,252,252,252,50,0,0,0,12,252,252,252,3,0,0,0,2,252,252,252,1,0,0,0,1,252,252,252,1,0,0,0,1,252,252,252,7,0,0,0,1,252,252,252,2,0,0,0,1,252,252,252,1,0,0,0,1,252,252,252,1,0,0,0,2,252,252,252,7,0,0,0,1,252,252,252,2,0,0,0,2,252,252,252,1,0,0,0,1,252,252,252,1,0,0,0,1,252,252,252,7,0,0,0,1,252,252,252,2,0,0,0,1,252,252,252,1,0,0,0,1,252,252,252,1,0,0,0,2,252,252,252,7,0,0,0,1,252,252,252,2,0,0,0,2,252,252,252,1,0,0,0,1,252,252,252,1,0,0,0,1,252,252,252,7,0,0,0,1,252,252,252,2,0,0,0,1,252,252,252,1,0,0,0,1,252,252,252,1,0,0,0,2,252,252,252,7,0,0,0,1,252,252,252,2,0,0,0,2,252,252,252,1,0,0,0,1,252,252,252,1,0,0,0,1,252,252,252,7,0,0,0,1,252,252,252,2,0,0,0,1,252,252,252,1,0,0,0,1,252,252,252,1,0,0,0,2,252,252,252,7,0,0,0,1,252,252,252,2,0,0,0,2,252,252,252,1,0,0,0,1,252,252,252,1,0,0,0,1,252,252,252,7,0,0,0,1,252,252,252,2,0,0,0,1,252,252,252,1,0,0,0,1,252,252,252,1,0,0,0,2,252,252,252,7,0,0,0,1,252,252,252,2,0,0,0,2,252,252,252,1,0,0,0,1,252,252,252,1,0,0,0,1,252,252,
-252,7,0,0,0,1,252,252,252,2,0,0,0,1,252,252,252,1,0,0,0,1,252,252,252,1,0,0,0,2,252,252,252,7,0,0,0,1,252,252,252,3,0,0,0,12,252,252,252,50);
+84,69,65,49,35,16,0,0,0,20,0,0,0,252,252,252,50,102,102,51,12,252,252,252,3,128,128,64,2,252,252,252,1,128,128,64,1,252,252,252,1,128,128,64,1,252,252,252,7,128,128,64,1,252,252,252,2,153,153,76,1,252,252,252,1,153,153,76,1,252,252,252,1,153,153,76,2,252,252,252,7,153,153,76,1,252,252,252,2,178,178,89,2,252,252,252,1,178,178,89,1,252,252,252,1,178,178,89,1,252,252,252,7,178,178,89,1,252,252,252,2,204,204,102,1,252,252,252,1,204,204,102,1,252,252,252,1,204,204,102,2,252,252,252,7,204,204,102,1,252,252,252,2,230,230,115,2,252,252,252,1,230,230,115,1,252,252,252,1,230,230,115,1,252,252,252,7,230,230,115,1,252,252,252,2,255,255,128,1,252,252,252,1,255,255,128,1,252,252,252,1,255,255,128,2,252,252,252,7,255,255,128,1,252,252,252,2,255,255,128,2,252,252,252,1,255,255,128,1,252,252,252,1,255,255,128,1,252,252,252,7,255,255,128,1,252,252,252,2,230,230,115,1,252,252,252,1,230,230,115,1,252,252,252,1,230,230,115,2,252,252,252,7,230,230,115,1,252,252,252,2,204,204,102,2,252,252,252,1,204,204,102,1,252,252,
+252,1,204,204,102,1,252,252,252,7,204,204,102,1,252,252,252,2,178,178,89,1,252,252,252,1,178,178,89,1,252,252,252,1,178,178,89,2,252,252,252,7,178,178,89,1,252,252,252,2,153,153,76,2,252,252,252,1,153,153,76,1,252,252,252,1,153,153,76,1,252,252,252,7,153,153,76,1,252,252,252,2,128,128,64,1,252,252,252,1,128,128,64,1,252,252,252,1,128,128,64,2,252,252,252,7,128,128,64,1,252,252,252,3,102,102,51,12,252,252,252,50);
 }
-
 //.cleaning procs
 function bible__cleanfile(xfilename:string;xremtabs,xstrictcheck,xlrelaxed_nocodechecking:boolean):boolean;//22mar2025
 function bible__cleanfiles(xfolder,xmask:string;xremtabs,xstrictcheck:boolean):boolean;
@@ -299,10 +313,14 @@ xname:=strlow(xname);
 if      (xname='slogan')              then result:=''//info__app('name')+' by Blaiz Enterprises'
 else if (xname='width')               then result:='1450'
 else if (xname='height')              then result:='900'
+
 else if (xname='language')            then result:='english-australia'//for Clyde - 14sep2025
 else if (xname='codepage')            then result:='1252'
-else if (xname='ver')                 then result:='1.00.2158'
-else if (xname='date')                then result:='09nov2025'
+else if (xname='msix.tags')           then result:='-'//for Clyde
+else if (xname='msstore.name')        then result:='TheHolyBible'//for Clyde
+
+else if (xname='ver')                 then result:='1.00.2160'
+else if (xname='date')                then result:='17apr2025'
 else if (xname='name')                then result:='The Holy Bible'
 else if (xname='web.name')            then result:='theholybible'//used for website name
 else if (xname='des')                 then result:='Read and search through the passages of The Holy Bible'
@@ -312,23 +330,22 @@ else if (xname='diskname')            then result:=io__extractfilename(io__exena
 else if (xname='service.name')        then result:=info__app('name')
 else if (xname='service.displayname') then result:=info__app('service.name')
 else if (xname='service.description') then result:=info__app('des')
-else if (xname='new.instance')        then result:='1'//1=allow new instance, else=only one instance of app permitted
-else if (xname='screensizelimit%')    then result:='95'//95% of screen area
-else if (xname='realtimehelp')        then result:='0'//1=show realtime help, 0=don't
-else if (xname='hint')                then result:='1'//1=show hints, 0=don't
 
 //.links and values
 else if (xname='linkname')            then result:=info__app('name')+' by Blaiz Enterprises.lnk'
 else if (xname='linkname.vintage')    then result:=info__app('name')+' (Vintage) by Blaiz Enterprises.lnk'
+
 //.author
 else if (xname='author.shortname')    then result:='Blaiz'
 else if (xname='author.name')         then result:='Blaiz Enterprises'
 else if (xname='portal.name')         then result:='Blaiz Enterprises - Portal'
 else if (xname='portal.tep')          then result:=intstr32(tepBE20)
+
 //.software
 else if (xname='software.tep')        then result:=intstr32(low__aorb(tepNext20,tepIcon20,sizeof(program_icon20h)>=2))
 else if (xname='url.software')        then result:='https://www.blaizenterprises.com/'+info__app('web.name')+'.html'
 else if (xname='url.software.zip')    then result:='https://www.blaizenterprises.com/'+info__app('web.name')+'.zip'
+
 //.urls
 else if (xname='url.portal')          then result:='https://www.blaizenterprises.com'
 else if (xname='url.contact')         then result:='https://www.blaizenterprises.com/contact.html'
@@ -339,10 +356,12 @@ else if (xname='url.x')               then result:=info__app('url.twitter')
 else if (xname='url.instagram')       then result:='https://www.instagram.com/blaizenterprises'
 else if (xname='url.sourceforge')     then result:='https://sourceforge.net/u/blaiz2023/profile/'
 else if (xname='url.github')          then result:='https://github.com/blaiz2023'
+
 //.program/splash
 else if (xname='license')             then result:='MIT License'
-else if (xname='copyright')           then result:='© 1997-'+low__yearstr(2025)+' Blaiz Enterprises'
+else if (xname='copyright')           then result:='© 1997-'+low__yearstr(2026)+' Blaiz Enterprises'
 else if (xname='splash.web')          then result:='Web Portal: '+app__info('url.portal')
+
 //.overrides
 else if (xname='color.name')          then result:='white and pale'//default color scheme name - 09nov2025
 
@@ -393,31 +412,54 @@ except;end;
 end;
 
 
-function app__findcustomtep(xindex:longint;var xdata:tlistptr):boolean;
+procedure app__customTEP(const xindex:longint);
 
-  procedure m(const x:array of byte);//map array to pointer record
-  begin
-  {$ifdef gui}
-  xdata:=low__maplist(x);
-  {$else}
-  xdata.count:=0;
-  xdata.bytes:=nil;
-  {$endif}
-  end;
-begin//Provide the program with a set of optional custom "tep" images, supports images in the TEA format (binary text image)
-//defaults
-//result:=false;
+   procedure mc(const sm ,sc:array of byte);//mono + color
+   begin
 
-//sample custom image support
+   tep__20( xindex ,sm ,sc ,it_rle8 ,it_img32 );
 
+   end;
+
+   procedure m(const sm:array of byte);//mono only
+   begin
+
+   tep__20( xindex ,sm ,[0] ,it_rle8 ,it_img32 );
+
+   end;
+
+   procedure m32(const sm:array of byte);//mono only
+   begin
+
+   tep__32( xindex ,sm ,[0] ,it_rle8 ,it_img32 );
+
+   end;
+
+   procedure c(const sc:array of byte);//color only
+   begin
+
+   tep__20( xindex ,[0] ,sc ,it_rle8 ,it_img32 );
+
+   end;
+
+   procedure m6(const sm:array of byte);//mono only
+   begin
+
+   tep__20( xindex ,sm ,[0] ,it_rle6 ,it_img32 );
+
+   end;
+
+begin
+
+//examples:
 case xindex of
-5000:m(tep_write32);
-5001:m(tep_search32);
-5002:m(tep_panel20);
-end;
 
-//successful
-result:=(xdata.count>=1);
+tepWrite32  :m32(tep_write32);
+tepSearch32 :m32(tep_search32);
+tepPanel20  :c(tep_panel20);
+
+end;//case
+
 end;
 
 function app__syncandsavesettings:boolean;
@@ -509,7 +551,7 @@ var
    result:=false;
 
    //init
-   slen:=low__len(sv);
+   slen:=low__len32(sv);
 
    //get
    for p:=1 to slen do if (sv[p-1+stroffset]=':') then
@@ -755,7 +797,7 @@ str__clear(@d);
 while low__nextline0(s,sline,spos) do
 begin
 v   :=sline.text+#0;//append a EOL marker
-vlen:=low__len(v);
+vlen:=low__len32(v);
 
 if (vlen>=1) then
    begin
@@ -833,7 +875,7 @@ if system_debug then dbstatus(38,'Debug 010 - 21may2021_528am');//yyyy
 
 
 //self
-inherited create(strint32(app__info('width')),strint32(app__info('height')),true);
+inherited create(strint32(app__info('width')),strint32(app__info('height')));
 ibuildingcontrol:=true;
 iloaded:=false;
 
@@ -849,9 +891,9 @@ scroll:=false;
 xhead;
 xgrad;
 
-xhead.add('1 Panel',5002,0,'panel.1','Toggle two panel view');
-xhead.add('2 Panels',5002,0,'panel.2','Toggle two panel view');
-xhead.add('3 Panels',5002,0,'panel.3','Toggle two panel view');
+xhead.add('1 Panel'  ,tepPanel20 ,0,'panel.1','Toggle two panel view');
+xhead.add('2 Panels' ,tepPanel20 ,0,'panel.2','Toggle two panel view');
+xhead.add('3 Panels' ,tepPanel20 ,0,'panel.3','Toggle two panel view');
 
 xhead.xaddoptions;
 xhead.xaddhelp;
@@ -1198,7 +1240,7 @@ icode  :='';
 
 //get file data from shared storage
 sysshared_storage.findbyslot(ifileindex,ifiledata);
-ifilesize:=str__len(@ifiledata);
+ifilesize:=str__len32(@ifiledata);
 sysshared_stylemask.minlen(ifilesize);
 
 
@@ -1467,17 +1509,21 @@ end;
 iedit:=nedit('Type one or more words to search',xsearch);
 with iedit do
 begin
-odel_clearstext:=true;
-scale:=1.4;
-tep:=5000;
-tep2:=5001;//tep_search32
-orightbut_narrowfocus:=true;
+
+odel_clearstext       :=true;
+scale                 :=1.4;
+tep                   :=tepWrite32;
+tep2                  :=tepSearch32;
+orightbut_narrowfocus :=true;
+
 end;
 
 with nbreak(20) do
 begin
-normal:=false;
-opaint:=true;
+
+normal                :=false;
+opaint                :=true;
+
 end;
 
 end;
@@ -1750,7 +1796,7 @@ var
 
 
       xlasthead2:=xlasthead1;
-      for p:=1 to low__len(xlasthead2) do xlasthead2[p-1+stroffset]:='b';
+      for p:=1 to low__len32(xlasthead2) do xlasthead2[p-1+stroffset]:='b';
 
       vheadonce:=false;
       end;
@@ -1761,7 +1807,7 @@ var
       p:longint;
    begin
    result:=#10+#10;
-   if xmask then for p:=1 to low__len(result) do result[p-1+stroffset]:=#0;
+   if xmask then for p:=1 to low__len32(result) do result[p-1+stroffset]:=#0;
    end;
 
    function vinfo(xmask:boolean):string;
@@ -1772,8 +1818,8 @@ var
       function vlen(xresult,x:string):string;
       begin
       result:=x;
-      xstart:=low__len(xresult)+1;
-      xlen  :=low__len(x);
+      xstart:=low__len32(xresult)+1;
+      xlen  :=low__len32(x);
       end;
 
       function xpad(x:longint):string;
@@ -1783,7 +1829,7 @@ var
          xlen:longint;
       begin
       result:=k64(x);
-      xlen:=low__len(result);
+      xlen:=low__len32(result);
       if (xlen<xmaxwidth) then result:=strcopy1(xpadding,1,frcmin32(xmaxwidth-xlen,0))+result;
       end;
    begin
@@ -1795,7 +1841,7 @@ var
    xmaxwidth:=0;
    for p:=0 to high(xbookinresults) do if (xbookinresults[p]>=1) then
       begin
-      int1:=low__len(k64(xbookinresults[p]));
+      int1:=low__len32(k64(xbookinresults[p]));
       if (int1>xmaxwidth) then xmaxwidth:=int1;
       end;
 
@@ -1814,7 +1860,7 @@ var
 
    if (xsectionsmatched<=0) then result:=result+vlen(result,'No passages match your query');
 
-   if xmask then for p:=1 to low__len(result) do if (p>=xstart) and (p<(xstart+xlen)) then result[p-1+stroffset]:='b' else result[p-1+stroffset]:=#0;
+   if xmask then for p:=1 to low__len32(result) do if (p>=xstart) and (p<(xstart+xlen)) then result[p-1+stroffset]:='b' else result[p-1+stroffset]:=#0;
    end;
 
    function whave(x:string):boolean;
@@ -1837,7 +1883,7 @@ var
    if (x<>'') and (not whave(x)) and (wcount<=high(wlist)) then
       begin
       wlist[wcount]:=strlow(x);
-      wlen [wcount]:=low__len(wlist[wcount]);
+      wlen [wcount]:=low__len32(wlist[wcount]);
       wl   [wcount]:=byte(strlow(x[1])[1]);
       wu   [wcount]:=byte(strup(x[1])[1]);
       inc(wcount);
@@ -1909,7 +1955,7 @@ if not icore.findbyslot(ititleslot,xtitle,xfrom,xto,xscope) then goto skipsearch
 //words
 xsepcount:=0;
 
-for p:=1 to low__len(stext) do
+for p:=1 to low__len32(stext) do
 begin
 v:=strbyte1(stext,p);
 if xsep(v) then
@@ -1960,7 +2006,7 @@ if icore.nextsection1(dpos,dstart,dlen) then
          if xprematch then
             begin
             str1    :=icore.filedata.str1[lp,p-lp];
-            strlen1 :=low__len(str1);
+            strlen1 :=low__len32(str1);
 
                                          //fast check                   //slow but thorough check
             for w:=0 to (wcount-1) do if ((not xexactmatch) or (wlen[w]=strlen1)) and ((v1=wl[w]) or (v1=wu[w])) and strmatch(wlist[w],strcopy1(str1,1, low__aorb(wlen[w],strlen1,xexactmatch) )) then
@@ -2011,12 +2057,16 @@ if icore.nextsection1(dpos,dstart,dlen) then
 skipsearch:
 b1.sins(vinfo(false),0);
 
-if xretainvpos then itext.ioset2(b1,low__wordcore_str2(itext.core^,'vpos.px',''),itext.vpos) else itext.iosettxt(b1);
+if xretainvpos then itext.ioset2(b1,itext.core.vpos_px,itext.vpos) else itext.iosettxt(b1);
 
 if (xhighlightstyle<>0) or xhead then
    begin
+
    b2.sins(vinfo(true),0);
-   itext.applystylebymask(b2);
+
+   //was: itext.applystylebymask(b2);
+   itext.core.cwriteall( ftmApplyMask ,b2 );
+
    end;
 
 //.history
@@ -2076,12 +2126,14 @@ else if (xcode2='clear') then
 else if (xcode2='align.0') then ialign:=0
 else if (xcode2='align.1') then ialign:=1
 else if (xcode2='align.2') then ialign:=2
-else if (strcopy1(xcode2,1,6)='index.') then title:=icore.title[strint32(strcopy1(xcode2,7,low__len(xcode2)))]
-else if (strcopy1(xcode2,1,5)='file.') then fileindex:=strint32(strcopy1(xcode2,6,low__len(xcode2)))
+else if (strcopy1(xcode2,1,6)='index.') then title:=icore.title[strint32(strcopy1(xcode2,7,low__len32(xcode2)))]
+else if (strcopy1(xcode2,1,5)='file.') then fileindex:=strint32(strcopy1(xcode2,6,low__len32(xcode2)))
 else if (xcode2='compact') then
    begin
+
    icompact:=not icompact;
    imustfind_retainvpos:=true;
+
    end
 else if (xcode2='exact') then
    begin
@@ -2099,7 +2151,7 @@ else if (xcode2='auto') then
    end
 else if (strcopy1(xcode2,1,10)='highlight.') then
    begin
-   ihighlight:=frcrange32(strint32(strcopy1(xcode2,11,low__len(xcode2))),0,3);
+   ihighlight:=frcrange32(strint32(strcopy1(xcode2,11,low__len32(xcode2))),0,3);
    imustfind_retainvpos:=true;
    end
 else if (xcode2='hisclear') then
@@ -2122,7 +2174,7 @@ else if (xcode2='hisedit') then
 else if (xcode2='history') or (xcode2='settings') or (xcode2='index') then showmenu2(xcode2)
 else if strmatch(strcopy1(xcode2,1,14),'searchhistory:') then
    begin
-   iedit.value:=strcopy1(xcode2,15,low__len(xcode2));
+   iedit.value:=strcopy1(xcode2,15,low__len32(xcode2));
    imustfind:=true;
    end
 else
@@ -2242,12 +2294,14 @@ if (ms64>=itimer100) then
       //find
       if imustfind or imustfind_retainvpos or imustfindnohistory then
          begin
+
          xretainvpos          :=imustfind_retainvpos;
          xhis                 :=not imustfindnohistory;
          imustfind            :=false;
          imustfindnohistory   :=false;
          imustfind_retainvpos :=false;
          xfind(xhis,xretainvpos);
+
          end;
 
       //search as you type
@@ -2281,8 +2335,8 @@ var
 
    function vstr:string;
    begin
-   result:=strcopy1(x,lp+low__len(n)+1,low__len(x)-1);
-   if (strcopy1(result,low__len(result),1)=';') then strdel1(result,low__len(result),1);
+   result:=strcopy1(x,lp+low__len32(n)+1,low__len32(x)-1);
+   if (strcopy1(result,low__len32(result),1)=';') then strdel1(result,low__len32(result),1);
    end;
 begin
 //init
@@ -2305,7 +2359,7 @@ x           :=x+';';
 
 //get
 lp:=1;
-for p:=1 to low__len(x) do
+for p:=1 to low__len32(x) do
 begin
 if (x[p-1+stroffset]=';') then
    begin

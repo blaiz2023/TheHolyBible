@@ -12,7 +12,8 @@ uses
   gosswin in 'gosswin.pas',
   gossjpg in 'gossjpg.pas',
   gosszip in 'gosszip.pas',
-  bibles in 'bibles.pas';
+  bibles in 'bibles.pas',
+  gosstext in 'gosstext.pas';
 
 //include multi-format icon - Delphi 3 can't compile an of 256x256 @ 32 bit -> resource error/out of memory error - 19nov2024
 {$R theholybible-256.res}//17jun2025

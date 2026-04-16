@@ -20,7 +20,8 @@ uses
   gosswin,
   gossjpg,
   gosszip,
-  bibles;
+  bibles,
+  gosstext;
   { you can add units after this }
 
 
