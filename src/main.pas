@@ -30,9 +30,9 @@ uses gossroot, {$ifdef gui}gossgui,{$endif} {$ifdef snd}gosssnd,{$endif} gosswin
 //##
 //## ==========================================================================================================================================================================================================================
 //## Library.................. app code (main.pas)
-//## Version.................. 1.00.2160 (+14)
+//## Version.................. 1.00.2162 (+16)
 //## Items.................... 3
-//## Last Updated ............ 17apr2026, 09nov2025, 16jun2025, 17apr2025, 21mar2025
+//## Last Updated ............ 23apr2026, 17apr2026, 09nov2025, 16jun2025, 17apr2025, 21mar2025
 //## Lines of Code............ 2,400+
 //## Origin .................. Human generated and maintained
 //##
@@ -319,8 +319,8 @@ else if (xname='codepage')            then result:='1252'
 else if (xname='msix.tags')           then result:='-'//for Clyde
 else if (xname='msstore.name')        then result:='TheHolyBible'//for Clyde
 
-else if (xname='ver')                 then result:='1.00.2160'
-else if (xname='date')                then result:='17apr2025'
+else if (xname='ver')                 then result:='1.00.2162'
+else if (xname='date')                then result:='23apr2025'
 else if (xname='name')                then result:='The Holy Bible'
 else if (xname='web.name')            then result:='theholybible'//used for website name
 else if (xname='des')                 then result:='Read and search through the passages of The Holy Bible'
@@ -2165,7 +2165,7 @@ else if (xcode2='hisclear') then
 else if (xcode2='hisedit') then
    begin
    str1:=histext;
-   if gui.poptxt2(str1,0,false,'','') then
+   if gui.poptxt2(str1,0,false,true,'','') then
       begin
       hissettext(str1);
       hissave;
