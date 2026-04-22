@@ -1,4 +1,4 @@
-# The Holy Bible v1.0.2160 / 17apr2026 / MIT License
+# The Holy Bible v1.0.2162 / 23apr2026 / MIT License
 Read and search The Holy Bible with this easy to use offline app.
 
 <img src="images/theholybible-screenshot.jpg">
