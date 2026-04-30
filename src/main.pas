@@ -30,9 +30,9 @@ uses gossroot, {$ifdef gui}gossgui,{$endif} {$ifdef snd}gosssnd,{$endif} gosswin
 //##
 //## ==========================================================================================================================================================================================================================
 //## Library.................. app code (main.pas)
-//## Version.................. 1.00.2162 (+16)
+//## Version.................. 1.00.2163 (+17)
 //## Items.................... 3
-//## Last Updated ............ 23apr2026, 17apr2026, 09nov2025, 16jun2025, 17apr2025, 21mar2025
+//## Last Updated ............ 30apr2026, 23apr2026, 17apr2026, 09nov2025, 16jun2025, 17apr2025, 21mar2025
 //## Lines of Code............ 2,400+
 //## Origin .................. Human generated and maintained
 //##
@@ -317,10 +317,10 @@ else if (xname='height')              then result:='900'
 else if (xname='language')            then result:='english-australia'//for Clyde - 14sep2025
 else if (xname='codepage')            then result:='1252'
 else if (xname='msix.tags')           then result:='-'//for Clyde
-else if (xname='msstore.name')        then result:='TheHolyBible'//for Clyde
+else if (xname='msstore.name')        then result:='The Holy Bible'//for Clyde - 30apr2026
 
-else if (xname='ver')                 then result:='1.00.2162'
-else if (xname='date')                then result:='23apr2025'
+else if (xname='ver')                 then result:='1.00.2163'
+else if (xname='date')                then result:='30apr2025'
 else if (xname='name')                then result:='The Holy Bible'
 else if (xname='web.name')            then result:='theholybible'//used for website name
 else if (xname='des')                 then result:='Read and search through the passages of The Holy Bible'
